@@ -51,7 +51,50 @@
 
     <div class="panel panel-primary">
       <div class="panel-heading"><span class="glyphicon glyphicon-calendar" style="float: left"></span>&nbsp;&nbsp;Recent Visits<span class="glyphicon glyphicon-pencil" style="float: right"></span></div>
-      <div class="panel-body">Recent Visits</div>
+      <div class="panel-body">
+    
+    
+
+<div class="row">     
+<div class="col-md-6">
+  
+  <table class="table">
+    <tbody>
+      
+      <tr>
+        <td>Today</td>
+        <td><button type="button" class="btn btn-primary">OutPatient</button></td>
+      </tr>
+      
+      <tr>
+        <td>04.Apr.2016 - Today</td>
+        <td><button type="button" class="btn btn-primary">InPatient</button></td>
+      </tr>
+      
+    </tbody>
+    </table>
+
+
+<!-- <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Today</label>
+      <div class="col-sm-10">
+        <button style="float: right;" type="button" class="btn btn-primary">OutPatient</button>
+      </div>
+    </div>
+    <hr>
+  <div class="form-group">
+      <label class="col-sm-2 control-label">Today</label>
+      <div class="col-sm-10">
+        <button style="float: right;" type="button" class="btn btn-primary">OutPatient</button>
+      </div>
+    </div>
+</form> -->
+
+</div>
+</div>
+
+      </div>
     </div>
 
     <div class="panel panel-primary">
@@ -64,7 +107,64 @@
         <span class="glyphicon glyphicon-heart" style="float: left"></span>&nbsp;&nbsp;Vitals
         <span class="glyphicon glyphicon-pencil" style="float: right"></span>
       </div>
-      <div class="panel-body">Vitals</div>
+      <div class="panel-body">
+
+<div class="row">
+<div class="col-md-4">
+    <table class="table">
+    <thead>
+      <tr>
+        <th style="text-align:right;">Last Vitals:</th>
+        <th>04.Apr.2016 05:45 PM</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td align="right">Height (cm)</td>
+        <td>55cm</td>
+      </tr>
+      <tr>
+        <td align="right">Weight (kg)</td>
+        <td>76kg</td>
+      </tr>
+      <tr>
+        <td align="right">(Calculated) BMI</td>
+        <td><b>251.2</b></td>
+      </tr>
+
+      <tr>
+        <td align="right">Temperature (C)</td>
+        <td>26° C</td>
+      </tr>
+
+      <tr>
+        <td align="right">Pulse</td>
+        <td>120/min</td>
+      </tr>
+
+      <tr>
+        <td align="right">Respiratory Rate</td>
+        <td>120/min</td>
+      </tr>
+
+      <tr>
+        <td align="right">Blood Pressure</td>
+        <td>120 / 80</td>
+      </tr>
+
+      <tr>
+        <td align="right">Blood Oxygen saturation</td>
+        <td>12 %</td>
+      </tr>
+
+    </tbody>
+        </table>
+
+</div>
+</div>
+
+
+      </div>
     </div>
 
         <div class="panel panel-primary">
