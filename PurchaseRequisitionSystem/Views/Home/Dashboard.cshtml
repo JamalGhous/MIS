@@ -1,0 +1,182 @@
+@model PurchaseRequisitionSystem.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Welcome, @Model.CurrentUserName</h2>
+            <p class="text-muted">Role: @Model.CurrentUserRole</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="card-title">
+                        <i class="fas fa-clock"></i> In Process
+                    </div>
+                    <h3>@Model.TotalInProcess</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="card-title">
+                        <i class="fas fa-check"></i> Approved
+                    </div>
+                    <h3>@Model.TotalApproved</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <div class="card-title">
+                        <i class="fas fa-times"></i> Rejected
+                    </div>
+                    <h3>@Model.TotalRejected</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="card-title">
+                        <i class="fas fa-user-check"></i> Pending My Approval
+                    </div>
+                    <h3>@Model.PendingMyApproval</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a href="@Url.Action("Create", "PurchaseRequisition")" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus"></i> Create New PR
+            </a>
+            <a href="@Url.Action("Index", "PurchaseRequisition")" class="btn btn-secondary btn-lg">
+                <i class="fas fa-list"></i> My Requests
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- My Requests -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>My Recent Requests</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.MyRequests.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>PR Number</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var pr in Model.MyRequests.Take(5))
+                                    {
+                                        <tr>
+                                            <td>@pr.PRNumber</td>
+                                            <td>
+                                                <span class="badge badge-@(GetStatusBadgeColor(pr.CurrentStatus))">
+                                                    @pr.CurrentStatus.ToString().Replace("Pending", "")
+                                                </span>
+                                            </td>
+                                            <td>@pr.CostEstimation.ToString("C")</td>
+                                            <td>@pr.CreatedDate.ToString("MMM dd")</td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "PurchaseRequisition", new { id = pr.Id })" 
+                                                   class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="@Url.Action("Index", "PurchaseRequisition")" class="btn btn-link">View All</a>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No requests found.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Pending My Approval</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PendingApprovals.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>PR Number</th>
+                                        <th>Initiator</th>
+                                        <th>Amount</th>
+                                        <th>Days Pending</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var pr in Model.PendingApprovals.Take(5))
+                                    {
+                                        <tr>
+                                            <td>@pr.PRNumber</td>
+                                            <td>@pr.Initiator.FullName</td>
+                                            <td>@pr.CostEstimation.ToString("C")</td>
+                                            <td>@((DateTime.UtcNow - pr.CreatedDate).Days)</td>
+                                            <td>
+                                                <a href="@Url.Action("Approve", "PurchaseRequisition", new { id = pr.Id })" 
+                                                   class="btn btn-sm btn-outline-warning">Review</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No pending approvals.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetStatusBadgeColor(PurchaseRequisitionSystem.Models.ApprovalStatus status)
+    {
+        return status switch
+        {
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Approved => "success",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Rejected => "danger",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Initiated => "info",
+            _ => "warning"
+        };
+    }
+}

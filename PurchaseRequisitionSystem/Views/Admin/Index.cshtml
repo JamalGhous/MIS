@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Administration";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>System Administration</h2>
+            <p class="text-muted">Manage system configuration and users</p>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-building fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Facility Master</h5>
+                    <p class="card-text">Manage facilities and locations</p>
+                    <a href="@Url.Action("FacilityMaster")" class="btn btn-primary">Manage Facilities</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-sitemap fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Hierarchy Master</h5>
+                    <p class="card-text">Configure approval hierarchies</p>
+                    <a href="@Url.Action("HierarchyMaster")" class="btn btn-success">Manage Hierarchy</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">User Management</h5>
+                    <p class="card-text">Manage users and roles</p>
+                    <a href="@Url.Action("Users")" class="btn btn-info">Manage Users</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-bar fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Reports & Analytics</h5>
+                    <p class="card-text">View system reports and analytics</p>
+                    <a href="@Url.Action("Reports")" class="btn btn-warning">View Reports</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title">System Settings</h5>
+                    <p class="card-text">Configure system settings</p>
+                    <a href="#" class="btn btn-secondary">System Settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
