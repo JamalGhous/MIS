@@ -1,0 +1,155 @@
+@model PurchaseRequisitionSystem.ViewModels.CreatePRViewModel
+
+@{
+    ViewData["Title"] = "Create Purchase Requisition";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Create Purchase Requisition</h2>
+            <hr />
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FacilityId" class="form-label"></label>
+                    <select asp-for="FacilityId" class="form-select" asp-items="@(new SelectList(Model.Facilities, "Id", "Name"))">
+                        <option value="">-- Select Facility --</option>
+                    </select>
+                    <span asp-validation-for="FacilityId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="RequestType" class="form-label"></label>
+                    <select asp-for="RequestType" class="form-select" asp-items="Html.GetEnumSelectList<PurchaseRequisitionSystem.Models.RequestType>()">
+                        <option value="">-- Select Request Type --</option>
+                    </select>
+                    <span asp-validation-for="RequestType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ExpenseType" class="form-label"></label>
+                    <select asp-for="ExpenseType" class="form-select" asp-items="Html.GetEnumSelectList<PurchaseRequisitionSystem.Models.ExpenseType>()" id="expenseType">
+                        <option value="">-- Select Expense Type --</option>
+                    </select>
+                    <span asp-validation-for="ExpenseType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6" id="opexCategoryDiv" style="display:none;">
+                <div class="form-group">
+                    <label asp-for="OpexCategory" class="form-label"></label>
+                    <select asp-for="OpexCategory" class="form-select" asp-items="Html.GetEnumSelectList<PurchaseRequisitionSystem.Models.OpexCategory>()">
+                        <option value="">-- Select OPEX Category --</option>
+                    </select>
+                    <span asp-validation-for="OpexCategory" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input asp-for="IsBudgeted" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsBudgeted" class="form-check-label"></label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="CostEstimation" class="form-label"></label>
+                    <input asp-for="CostEstimation" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="CostEstimation" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ItemCode" class="form-label"></label>
+                    <input asp-for="ItemCode" class="form-control" />
+                    <span asp-validation-for="ItemCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Department" class="form-label"></label>
+                    <input asp-for="Department" class="form-control" />
+                    <span asp-validation-for="Department" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ItemDescription" class="form-label"></label>
+            <textarea asp-for="ItemDescription" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="ItemDescription" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Specification" class="form-label"></label>
+            <textarea asp-for="Specification" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Specification" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Justification" class="form-label"></label>
+            <textarea asp-for="Justification" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Justification" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Quantity" class="form-label"></label>
+                    <input asp-for="Quantity" class="form-control" type="number" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="UnitOfMeasure" class="form-label"></label>
+                    <select asp-for="UnitOfMeasure" class="form-select" asp-items="Html.GetEnumSelectList<PurchaseRequisitionSystem.Models.UnitOfMeasure>()">
+                        <option value="">-- Select Unit of Measure --</option>
+                    </select>
+                    <span asp-validation-for="UnitOfMeasure" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Attachments" class="form-label"></label>
+            <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" />
+            <div class="form-text">You can upload multiple files (PDF, Word, Excel, Images)</div>
+        </div>
+
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-primary">Create Purchase Requisition</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('expenseType').addEventListener('change', function() {
+            var opexDiv = document.getElementById('opexCategoryDiv');
+            if (this.value === '1') { // OPEX = 1
+                opexDiv.style.display = 'block';
+            } else {
+                opexDiv.style.display = 'none';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,370 @@
+@model PurchaseRequisitionSystem.ViewModels.PRTimelineViewModel
+
+@{
+    ViewData["Title"] = "Purchase Requisition Details";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Purchase Requisition Details</h2>
+                <div>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+                    @if (Model.PurchaseRequisition.CurrentStatus != PurchaseRequisitionSystem.Models.ApprovalStatus.Approved && 
+                         Model.PurchaseRequisition.CurrentStatus != PurchaseRequisitionSystem.Models.ApprovalStatus.Rejected)
+                    {
+                        <a href="@Url.Action("Approve", new { id = Model.PurchaseRequisition.Id })" class="btn btn-warning">Review & Approve</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PR Basic Information -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt"></i> @Model.PurchaseRequisition.PRNumber
+                        <span class="badge bg-@(GetStatusBadgeColor(Model.PurchaseRequisition.CurrentStatus)) ms-2">
+                            @GetStatusDisplayText(Model.PurchaseRequisition.CurrentStatus)
+                        </span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Initiator:</strong></td>
+                                    <td>@Model.PurchaseRequisition.Initiator.FullName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Facility:</strong></td>
+                                    <td>@Model.PurchaseRequisition.Facility.Name</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Department:</strong></td>
+                                    <td>@Model.PurchaseRequisition.Department</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Request Type:</strong></td>
+                                    <td>@Model.PurchaseRequisition.RequestType</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Expense Type:</strong></td>
+                                    <td>
+                                        @Model.PurchaseRequisition.ExpenseType
+                                        @if (Model.PurchaseRequisition.OpexCategory.HasValue)
+                                        {
+                                            <span class="text-muted">(@Model.PurchaseRequisition.OpexCategory)</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Cost Estimation:</strong></td>
+                                    <td class="h5 text-success">@Model.PurchaseRequisition.CostEstimation.ToString("C")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Is Budgeted:</strong></td>
+                                    <td>
+                                        <span class="badge bg-@(Model.PurchaseRequisition.IsBudgeted ? "success" : "warning")">
+                                            @(Model.PurchaseRequisition.IsBudgeted ? "Yes" : "No")
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Quantity:</strong></td>
+                                    <td>@Model.PurchaseRequisition.Quantity @Model.PurchaseRequisition.UnitOfMeasure</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Item Code:</strong></td>
+                                    <td>@Model.PurchaseRequisition.ItemCode</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Created Date:</strong></td>
+                                    <td>@Model.PurchaseRequisition.CreatedDate.ToString("MMM dd, yyyy HH:mm")</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Details -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Item Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Item Description:</strong>
+                        <p>@Model.PurchaseRequisition.ItemDescription</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Specification:</strong>
+                        <p>@Model.PurchaseRequisition.Specification</p>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.PurchaseRequisition.Justification))
+                    {
+                        <div class="mb-3">
+                            <strong>Justification:</strong>
+                            <p>@Model.PurchaseRequisition.Justification</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attachments -->
+    @if (Model.Attachments.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-paperclip"></i> Attachments</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var attachment in Model.Attachments)
+                            {
+                                <div class="col-md-4 mb-2">
+                                    <div class="border p-2 rounded">
+                                        <i class="fas fa-file"></i>
+                                        <a href="@attachment.FilePath" target="_blank">@attachment.FileName</a>
+                                        <br>
+                                        <small class="text-muted">
+                                            Uploaded by @attachment.UploadedByUser.FullName on @attachment.UploadedDate.ToString("MMM dd, yyyy")
+                                        </small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Approval Timeline -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Approval Timeline</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ApprovalHistory.Any())
+                    {
+                        <div class="timeline">
+                            @foreach (var history in Model.ApprovalHistory)
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-@(GetTimelineColor(history.Status))"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">
+                                            @GetStatusDisplayText(history.Status)
+                                            <small class="text-muted">- @history.Approver.FullName</small>
+                                        </h6>
+                                        <p class="timeline-date">@history.ActionDate.ToString("MMM dd, yyyy HH:mm")</p>
+                                        @if (!string.IsNullOrEmpty(history.Comments))
+                                        {
+                                            <p class="timeline-description">@history.Comments</p>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No approval history available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delegation History -->
+    @if (Model.DelegationHistory.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user-friends"></i> Delegation History</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Date</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var delegation in Model.DelegationHistory)
+                                    {
+                                        <tr>
+                                            <td>@delegation.FromUser.FullName</td>
+                                            <td>@delegation.ToUser.FullName</td>
+                                            <td>@delegation.DelegatedDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@delegation.Reason</td>
+                                            <td>
+                                                <span class="badge bg-@(delegation.IsActive ? "success" : "secondary")">
+                                                    @(delegation.IsActive ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.PurchaseRequisition.RejectionReason))
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Rejection Reason</h6>
+                    <p>@Model.PurchaseRequisition.RejectionReason</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.PurchaseRequisition.ClarificationNotes))
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-question-circle"></i> Clarification Required</h6>
+                    <p>@Model.PurchaseRequisition.ClarificationNotes</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 0;
+    bottom: -20px;
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.timeline-item:last-child:before {
+    bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -27px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-content {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 3px solid #dee2e6;
+}
+
+.timeline-title {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.timeline-description {
+    margin-bottom: 0;
+    color: #495057;
+}
+</style>
+
+@functions {
+    private string GetStatusBadgeColor(PurchaseRequisitionSystem.Models.ApprovalStatus status)
+    {
+        return status switch
+        {
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Approved => "success",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Rejected => "danger",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Initiated => "info",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Clarification => "warning",
+            _ => "secondary"
+        };
+    }
+
+    private string GetTimelineColor(PurchaseRequisitionSystem.Models.ApprovalStatus status)
+    {
+        return status switch
+        {
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Approved => "success",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Rejected => "danger",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Initiated => "info",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.Delegated => "warning",
+            _ => "primary"
+        };
+    }
+
+    private string GetStatusDisplayText(PurchaseRequisitionSystem.Models.ApprovalStatus status)
+    {
+        return status switch
+        {
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingHODInitiator => "Pending HOD (Initiator)",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingHODDepartment => "Pending HOD (Department)",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingFinance => "Pending Finance",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingWarehouse => "Pending Warehouse",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingSCM => "Pending SCM",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingDirector => "Pending Director",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingCFO => "Pending CFO",
+            PurchaseRequisitionSystem.Models.ApprovalStatus.PendingCEO => "Pending CEO",
+            _ => status.ToString()
+        };
+    }
+}
